@@ -1,100 +1,107 @@
----key system test
+local player = game.Players.LocalPlayer
 
-local UIS = game:GetService("UserInputService")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
-local requiredKey = "HelloWorld!" -- Change this to your desired key
-
--- Function to check if da key is correct
-local function checkKey(inputKey)
-    return inputKey == requiredKey
-end
-
+-- Create a ScreenGui
 local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Create a Frame for the key input
 local frame = Instance.new("Frame")
-local textBox = Instance.new("TextBox")
-local submitButton = Instance.new("TextButton")
-local statusLabel = Instance.new("TextLabel")
-
-screenGui.Parent = game.CoreGui
+frame.Size = UDim2.new(0.3, 0, 0.3, 0)
+frame.Position = UDim2.new(0.35, 0, 0.35, 0)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BackgroundTransparency = 0.5
 frame.Parent = screenGui
-frame.Size = UDim2.new(0, 300, 0, 150)
-frame.Position = UDim2.new(0.5, -150, 0.5, -75)
-frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 
-textBox.Parent = frame
-textBox.Size = UDim2.new(0, 200, 0, 50)
-textBox.Position = UDim2.new(0.5, -100, 0.2, 0)
-textBox.PlaceholderText = "Enter Key"
+-- Create a TextBox for key input
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(0.8, 0, 0.2, 0)
+textBox.Position = UDim2.new(0.1, 0, 0.4, 0)
+textBox.PlaceholderText = "Enter your key here..."
 textBox.Text = ""
-textBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+textBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+textBox.Parent = frame
 
-submitButton.Parent = frame
-submitButton.Size = UDim2.new(0, 200, 0, 50)
-submitButton.Position = UDim2.new(0.5, -100, 0.6, 0)
+-- Create a Button to submit the key
+local submitButton = Instance.new("TextButton")
+submitButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+submitButton.Position = UDim2.new(0.1, 0, 0.7, 0)
 submitButton.Text = "Submit"
-submitButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 submitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+submitButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+submitButton.Parent = frame
 
-statusLabel.Parent = frame
-statusLabel.Size = UDim2.new(0, 200, 0, 50)
-statusLabel.Position = UDim2.new(0.5, -100, 0.8, 0)
+-- Create a Label to show the status
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Size = UDim2.new(0.8, 0, 0.2, 0)
+statusLabel.Position = UDim2.new(0.1, 0, 0.1, 0)
 statusLabel.Text = ""
 statusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
 statusLabel.BackgroundTransparency = 1
+statusLabel.Parent = frame
 
-local secureFrame = Instance.new("Frame")
-local secureLabel = Instance.new("TextLabel")
+-- Fake key checker function
+local function checkKey(key)
+    return key == "SinxCcOnTop"
+end
 
-secureFrame.Parent = screenGui
-secureFrame.Size = UDim2.new(0, 300, 0, 150)
-secureFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
-secureFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-secureFrame.Visible = false
-
-secureLabel.Parent = secureFrame
-secureLabel.Size = UDim2.new(1, 0, 1, 0)
-secureLabel.Position = UDim2.new(0, 0, 0, 0)
-secureLabel.Text = "Welcome to the Secure GUI"
-secureLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-secureLabel.BackgroundTransparency = 1
-
+-- Function to handle key submission
 submitButton.MouseButton1Click:Connect(function()
     local inputKey = textBox.Text
     if checkKey(inputKey) then
         statusLabel.Text = "Key Accepted!"
         statusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
-        frame:Destroy() -- Remove the key input UI
-        secureFrame.Visible = true -- Show the secure GUI
+        
+        -- Create a Secure Frame
+        local secureFrame = Instance.new("Frame")
+        secureFrame.Size = UDim2.new(1, 0, 1, 0)
+secureFrame.Position = UDim2.new(0, 0, 0, 0)
+        secureFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        secureFrame.BackgroundTransparency = 0.5
+        secureFrame.Parent = screenGui
+        
+        -- Add fading welcome label
+        local welcomeLabel = Instance.new("TextLabel")
+        welcomeLabel.Parent = secureFrame
+        welcomeLabel.Size = UDim2.new(1, 0, 0, 30)
+        welcomeLabel.Position = UDim2.new(0, 0, 0, 0)
+        welcomeLabel.Text = "Welcome to Secure GUI"
+        welcomeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        welcomeLabel.BackgroundTransparency = 1
+        
+        -- Tween the entire frame and elements inside
+        local tweenService = game:GetService("TweenService")
+        local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        
+        local fadeTweenFrame = tweenService:Create(frame, tweenInfo, {BackgroundTransparency = 1})
+        local fadeTweenElements = {}
+        
+        for _, element in ipairs(frame:GetChildren()) do
+            if element:IsA("TextLabel") or element:IsA("TextButton") or element:IsA("TextBox") then
+                table.insert(fadeTweenElements, tweenService:Create(element, tweenInfo, {BackgroundTransparency = 1, TextTransparency = 1}))
+            end
+        end
+        
+        -- Play the tweens
+        fadeTweenFrame:Play()
+        
+        for _, tween in ipairs(fadeTweenElements) do
+            tween:Play()
+        end
+        
+        -- Wait for the tweens to complete and destroy the frame
+        fadeTweenFrame.Completed:Connect(function()
+            frame:Destroy()
+        end)
+        
+        -- Tween the welcome label
+        local fadeTweenLabel = tweenService:Create(welcomeLabel, tweenInfo, {TextTransparency = 1})
+        fadeTweenLabel:Play()
+        
+        fadeTweenLabel.Completed:Connect(function()
+            secureFrame:Destroy()
+        end)
     else
         statusLabel.Text = "Invalid Key!"
-        statusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
     end
-end)
-submitButton.MouseButton1Click:Connect(function()
-local inputKey = textBox.Text
-if checkKey(inputKey) then
-statusLabel.Text = "Key Accepted!"
-statusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
-frame:Destroy() -- Remove the key input UI
-secureFrame.Visible = true -- Show the secure GUI
-
--- Add fading welcome label
-local welcomeLabel = Instance.new("TextLabel")
-welcomeLabel.Parent = secureFrame
-welcomeLabel.Size = UDim2.new(1, 0, 0, 30)
-welcomeLabel.Position = UDim2.new(0, 0, 0, 0)
-welcomeLabel.Text = "Welcome to Secure GUI"
-welcomeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-welcomeLabel.BackgroundTransparency = 1
-
-wait(3) -- wait 3 seconds
-local fadeTween = game:GetService("TweenService"):Create(welcomeLabel, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {TextTransparency = 1})
-fadeTween:Play()
-
-wait(1) -- wait for the tween to finish
-welcomeLabel:Destroy() -- remove the welcome label
-end
 end)
