@@ -4,7 +4,7 @@ local UIS = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
-local requiredKey = "SinxCcOnTop" -- Change this to your desired key
+local requiredKey = "HelloWorld!" -- Change this to your desired key
 
 -- Function to check if da key is correct
 local function checkKey(inputKey)
