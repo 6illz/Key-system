@@ -42,7 +42,7 @@ statusLabel.Parent = frame
 
 -- Fake key checker function
 local function checkKey(key)
-    return key == "SinxCcOnTop"
+    return key == "ownedbydgqt"
 end
 
 -- Function to handle key submission
@@ -51,56 +51,35 @@ submitButton.MouseButton1Click:Connect(function()
     if checkKey(inputKey) then
         statusLabel.Text = "Key Accepted!"
         statusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
-        
-        -- Create a Secure Frame
-        local secureFrame = Instance.new("Frame")
-        secureFrame.Size = UDim2.new(1, 0, 1, 0)
-secureFrame.Position = UDim2.new(0, 0, 0, 0)
-        secureFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        secureFrame.BackgroundTransparency = 0.5
-        secureFrame.Parent = screenGui
-        
-        -- Add fading welcome label
-        local welcomeLabel = Instance.new("TextLabel")
-        welcomeLabel.Parent = secureFrame
-        welcomeLabel.Size = UDim2.new(1, 0, 0, 30)
-        welcomeLabel.Position = UDim2.new(0, 0, 0, 0)
-        welcomeLabel.Text = "Welcome to Secure GUI"
-        welcomeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-        welcomeLabel.BackgroundTransparency = 1
-        
-        -- Tween the entire frame and elements inside
+
+        wait(2) -- Wait for 2 seconds before starting to fade out
+
+        -- Tween to fade out the frame and its elements
+
         local tweenService = game:GetService("TweenService")
         local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-        
+
         local fadeTweenFrame = tweenService:Create(frame, tweenInfo, {BackgroundTransparency = 1})
         local fadeTweenElements = {}
-        
+
         for _, element in ipairs(frame:GetChildren()) do
             if element:IsA("TextLabel") or element:IsA("TextButton") or element:IsA("TextBox") then
                 table.insert(fadeTweenElements, tweenService:Create(element, tweenInfo, {BackgroundTransparency = 1, TextTransparency = 1}))
             end
         end
-        
+
         -- Play the tweens
         fadeTweenFrame:Play()
-        
+
         for _, tween in ipairs(fadeTweenElements) do
             tween:Play()
         end
-        
+
         -- Wait for the tweens to complete and destroy the frame
         fadeTweenFrame.Completed:Connect(function()
             frame:Destroy()
         end)
-        
-        -- Tween the welcome label
-        local fadeTweenLabel = tweenService:Create(welcomeLabel, tweenInfo, {TextTransparency = 1})
-        fadeTweenLabel:Play()
-        
-        fadeTweenLabel.Completed:Connect(function()
-            secureFrame:Destroy()
-        end)
+
     else
         statusLabel.Text = "Invalid Key!"
     end
